@@ -5,6 +5,7 @@ function addBook() {
     const authorName = document.getElementById('authorName').value;
     const bookDescription = document.getElementById('bookDescription').value;
     const pagesNumber = parseInt(document.getElementById('pagesNumber').value);
+    const editIndex = document.getElementById('editIndex').value;
 
     if (bookName && authorName && bookDescription && !isNaN(pagesNumber)) {
         const book = {
@@ -13,7 +14,14 @@ function addBook() {
             bookDescription: bookDescription,
             pagesNumber: pagesNumber
         };
-        books.push(book);
+        if (editIndex !== "") {
+            // Update existing book
+            books[editIndex] = book;
+            document.getElementById('editIndex').value = ""; // Clear edit index
+        } else {
+            // Add new book
+            books.push(book);
+        }
         showbooks();
         clearInputs();
     } else {
@@ -28,7 +36,8 @@ function showbooks() {
         <p><strong>Author Name: </strong>${book.authorName}</p>
         <p><strong>Book Description: </strong>${book.bookDescription}</p>
         <p><strong>No. of Pages: </strong>${book.pagesNumber} page(s)</p>
-        <button onclick='editbook(${index})'>Edit</button>`
+        <button onclick='editbook(${index})'>Edit</button>
+        <button onclick=deletebook(${index})>Delete</button>`
     );
     document.getElementById('books').innerHTML = booksDiv.join('');
 }
@@ -39,8 +48,7 @@ function editbook(index) {
     document.getElementById("authorName").value = book.authorName;
     document.getElementById("bookDescription").value = book.bookDescription;
     document.getElementById("pagesNumber").value = book.pagesNumber;
-    books.splice(index, 1);
-    showbooks();    
+    document.getElementById("editIndex").value = index;
 }
 
 function clearInputs() {
@@ -48,4 +56,9 @@ function clearInputs() {
     document.getElementById('authorName').value = '';
     document.getElementById('bookDescription').value = '';
     document.getElementById('pagesNumber').value = '';
+}
+
+function deletebook(index) {
+    books.splice(index, 1);
+    showbooks();
 }
